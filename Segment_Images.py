@@ -1,10 +1,13 @@
 from ij import IJ, WindowManager
 from ij.io import OpenDialog
 from ij.process import ImageConverter
-from javax.swing import JButton, JFrame, JLabel
+from javax.swing import JFrame, JLabel, JButton, JPanel, JComboBox
+from java.awt import BorderLayout
 
 img_paths = []
 opened_imgs = []
+dropdown = None
+current_img = None
 def process(imp): 
 	try:
 		IJ.run(imp, "Subtract Background...", "rolling=50");
@@ -25,19 +28,39 @@ def select_file(self):
 		img_paths.append(path);
 		opened_imgs.append(IJ.openImage(path));
 		opened_imgs[-1].show();
-		
+		dropdown.addItem(path);
 	else:
 		print("file not selected/found")
 
+def add_path_to_dropdown(): 
+	dropdown = JComboBox(img_paths);
+	grid_panel.add(dropdown, BorderLayout.CENTER);
+	frame.add(grid_panel);
+
+
+def process_stack(self):
+	#do nothing
+	return 0;
+
+
+def set_current_img(self): 
+	global current_img
+	print(self);
 
 def create_gui(): 
+	global dropdown
 	frame = JFrame('',
             defaultCloseOperation = JFrame.DISPOSE_ON_CLOSE,
             size = (300, 300));
-    
+	grid_panel = JPanel();
+	grid_panel.setLayout(BorderLayout());
 	button = JButton('get image', actionPerformed=select_file);
-	label1 = JLabel();    	
-	frame.add(button);
+	process_all_button = JButton('process all', actionPerformed=process_stack);
+	dropdown = JComboBox(img_paths, actionPerformed=set_current_img);
+	grid_panel.add(button, BorderLayout.NORTH);
+	grid_panel.add(dropdown, BorderLayout.CENTER);
+	grid_panel.add(process_all_button, BorderLayout.SOUTH);    	
+	frame.add(grid_panel);
 	frame.visible = True;
 
 
