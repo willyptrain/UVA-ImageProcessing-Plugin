@@ -2,12 +2,13 @@ from ij import IJ, WindowManager
 from ij.io import OpenDialog
 from ij.process import ImageConverter
 from javax.swing import JFrame, JLabel, JButton, JPanel, JComboBox
-from java.awt import BorderLayout
+from java.awt import BorderLayout, GridLayout
 
 img_paths = []
 opened_imgs = []
 dropdown = None
 current_img = None
+current_file = None
 def process(imp): 
 	try:
 		IJ.run(imp, "Subtract Background...", "rolling=50");
@@ -44,22 +45,29 @@ def process_stack(self):
 
 
 def set_current_img(self): 
-	global current_img
-	print(self);
+	global current_file
+	current_file = dropdown.getSelectedItem();
+	print(current_file)
 
 def create_gui(): 
-	global dropdown
+	global dropdown, current_file
 	frame = JFrame('',
             defaultCloseOperation = JFrame.DISPOSE_ON_CLOSE,
             size = (300, 300));
 	grid_panel = JPanel();
 	grid_panel.setLayout(BorderLayout());
+	center_flowPanel = JPanel();
+	center_flowPanel.setLayout(GridLayout());
 	button = JButton('get image', actionPerformed=select_file);
 	process_all_button = JButton('process all', actionPerformed=process_stack);
-	dropdown = JComboBox(img_paths, actionPerformed=set_current_img);
+	dropdown = JComboBox(img_paths);
+	current_file = dropdown.getSelectedItem();
+	process_file_button = JButton('Process only: ', actionPerformed=set_current_img);
 	grid_panel.add(button, BorderLayout.NORTH);
-	grid_panel.add(dropdown, BorderLayout.CENTER);
-	grid_panel.add(process_all_button, BorderLayout.SOUTH);    	
+	center_flowPanel.add(dropdown);
+	center_flowPanel.add(process_file_button);
+	grid_panel.add(process_all_button, BorderLayout.SOUTH); 
+	grid_panel.add(center_flowPanel, BorderLayout.CENTER);   	
 	frame.add(grid_panel);
 	frame.visible = True;
 
