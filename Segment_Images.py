@@ -7,7 +7,6 @@ from java.awt import BorderLayout, GridLayout
 img_paths = []
 opened_imgs = []
 dropdown = None
-current_img = None
 current_file = None
 def process(imp): 
 	try:
@@ -20,7 +19,7 @@ def process(imp):
 		IJ.run(imp, "NaN Background", "");
 		return imp;
 	except(AttributeError):
-		print("Image not found!");
+		print("error processing!");
 
 def select_file(self):
 	global img_paths, opened_imgs 
@@ -41,13 +40,21 @@ def add_path_to_dropdown():
 
 def process_stack(self):
 	#do nothing
+	global dropdown
+	len_stack = dropdown.getItemCount();
+	for i in range(0, len_stack):
+		temp_file = (dropdown.getItemAt(i));
+		img = IJ.openImage(temp_file);
+		
 	return 0;
 
 
-def set_current_img(self): 
+def process_img(self): 
 	global current_file
 	current_file = dropdown.getSelectedItem();
-	print(current_file)
+	temp_img = IJ.openImage(current_file);
+	processed_temp = process(temp_img);
+	processed_temp.show();
 
 def create_gui(): 
 	global dropdown, current_file
@@ -62,7 +69,7 @@ def create_gui():
 	process_all_button = JButton('process all', actionPerformed=process_stack);
 	dropdown = JComboBox(img_paths);
 	current_file = dropdown.getSelectedItem();
-	process_file_button = JButton('Process only: ', actionPerformed=set_current_img);
+	process_file_button = JButton('Process file from dropbox: ', actionPerformed=process_img);
 	grid_panel.add(button, BorderLayout.NORTH);
 	center_flowPanel.add(dropdown);
 	center_flowPanel.add(process_file_button);
@@ -70,7 +77,7 @@ def create_gui():
 	grid_panel.add(center_flowPanel, BorderLayout.CENTER);   	
 	frame.add(grid_panel);
 	frame.visible = True;
-
+	
 
 
 #img1_path = OpenDialog('Select an image file').getPath();
