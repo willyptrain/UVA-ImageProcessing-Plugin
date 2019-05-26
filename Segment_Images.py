@@ -1,12 +1,14 @@
 from ij import IJ, WindowManager
 from ij.io import OpenDialog
 from ij.process import ImageConverter
-from javax.swing import JFrame, JLabel, JButton, JPanel, JComboBox, BoxLayout
-from java.awt import BorderLayout, GridLayout, FlowLayout
+from javax.swing import JFrame, JLabel, JButton, JPanel, JComboBox
+from java.awt import GridBagLayout, GridBagConstraints
 img_paths = []
 opened_imgs = []
 dropdown = None
 current_file = None
+shortened_paths = {'': 'file not found'}
+
 def process(imp): 
 	try:
 		IJ.run(imp, "Subtract Background...", "rolling=50");
@@ -38,7 +40,6 @@ def add_path_to_dropdown():
 
 
 def process_stack(self):
-	#do nothing
 	global dropdown
 	len_stack = dropdown.getItemCount();
 	for i in range(0, len_stack):
@@ -61,21 +62,55 @@ def create_gui():
             defaultCloseOperation = JFrame.DISPOSE_ON_CLOSE,
             size = (300, 300));
 
-	add_file_button = JButton('add image', actionPerformed=select_file);
-	process_all_button = JButton('process all', actionPerformed=process_stack);
-	dropdown = JComboBox(img_paths);
-	current_file = dropdown.getSelectedItem();
-	process_file_button = JButton('Process file from dropbox: ', actionPerformed=process_img);
+	container_panel = JPanel(GridBagLayout());	
+	c = GridBagConstraints();
 	
-	container_panel = JPanel(GridLayout(2,1));
-	top_panel = JPanel(FlowLayout());
-	bottom_panel = JPanel(FlowLayout())
-	top_panel.add(dropdown);
-	bottom_panel.add(process_file_button);
-	bottom_panel.add(add_file_button);
-	bottom_panel.add(process_all_button);	
-	container_panel.add(top_panel);
-	container_panel.add(bottom_panel);	
+	dropdown = JComboBox(img_paths);
+	c.fill = GridBagConstraints.HORIZONTAL;
+	c.gridx = 0;
+	c.gridy = 0;
+	c.weightx = 0.5;
+	c.gridwidth = 3;
+	container_panel.add(dropdown, c);
+
+
+	
+	process_file_button = JButton('<html>Process file from dropbox: </html>', actionPerformed=process_img);
+	c.fill = GridBagConstraints.HORIZONTAL;
+	c.gridx = 0;
+	c.gridy = 1;
+	c.weightx = 0.5;
+	c.gridwidth = 1;
+	container_panel.add(process_file_button, c);
+	add_file_button = JButton('<html>add image</html>', actionPerformed=select_file);
+	c.fill = GridBagConstraints.HORIZONTAL;
+	c.gridx = 1;
+	c.gridy = 1;
+	c.weightx = 0.5;
+	c.gridwidth = 1;
+	container_panel.add(add_file_button, c);	
+	process_all_button = JButton('<html>process all</html>', actionPerformed=process_stack);
+	c.fill = GridBagConstraints.HORIZONTAL;
+	c.gridx = 2;
+	c.gridy = 1;
+	c.weightx = 0.5;
+	c.gridwidth = 1;
+	container_panel.add(process_all_button, c);
+	current_file = dropdown.getSelectedItem();
+
+
+
+	#c.fill = GridBagConstraints.HORIZONTAL; use for each
+	
+	#dropdown, c.grix: 0, c.gridy: 0, c.weightx=0.5, c.gridwidth=3
+	#process_file_button,  c.gridx: 0, c.gridy: 1, c.weightx=0.5, c.gridwidth=1
+	#add_file_button, c.gridx: 0, c.gridy: 2, c.weightx=0.5, c.gridwidth=1
+	#process_all_button, c.gridx: 0, c.gridy: 2, c.weightx=0.5, c.gridwidth=1
+	
+
+	
+
+	
 	frame.add(container_panel);
 	frame.visible = True;
 	
