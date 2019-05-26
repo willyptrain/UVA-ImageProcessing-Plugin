@@ -1,9 +1,8 @@
 from ij import IJ, WindowManager
 from ij.io import OpenDialog
 from ij.process import ImageConverter
-from javax.swing import JFrame, JLabel, JButton, JPanel, JComboBox
-from java.awt import BorderLayout, GridLayout
-
+from javax.swing import JFrame, JLabel, JButton, JPanel, JComboBox, BoxLayout
+from java.awt import BorderLayout, GridLayout, FlowLayout
 img_paths = []
 opened_imgs = []
 dropdown = None
@@ -61,21 +60,23 @@ def create_gui():
 	frame = JFrame('',
             defaultCloseOperation = JFrame.DISPOSE_ON_CLOSE,
             size = (300, 300));
-	grid_panel = JPanel();
-	grid_panel.setLayout(BorderLayout());
-	center_flowPanel = JPanel();
-	center_flowPanel.setLayout(GridLayout());
-	button = JButton('get image', actionPerformed=select_file);
+
+	add_file_button = JButton('add image', actionPerformed=select_file);
 	process_all_button = JButton('process all', actionPerformed=process_stack);
 	dropdown = JComboBox(img_paths);
 	current_file = dropdown.getSelectedItem();
 	process_file_button = JButton('Process file from dropbox: ', actionPerformed=process_img);
-	grid_panel.add(button, BorderLayout.NORTH);
-	center_flowPanel.add(dropdown);
-	center_flowPanel.add(process_file_button);
-	grid_panel.add(process_all_button, BorderLayout.SOUTH); 
-	grid_panel.add(center_flowPanel, BorderLayout.CENTER);   	
-	frame.add(grid_panel);
+	
+	container_panel = JPanel(GridLayout(2,1));
+	top_panel = JPanel(FlowLayout());
+	bottom_panel = JPanel(FlowLayout())
+	top_panel.add(dropdown);
+	bottom_panel.add(process_file_button);
+	bottom_panel.add(add_file_button);
+	bottom_panel.add(process_all_button);	
+	container_panel.add(top_panel);
+	container_panel.add(bottom_panel);	
+	frame.add(container_panel);
 	frame.visible = True;
 	
 
