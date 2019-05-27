@@ -73,60 +73,35 @@ def create_gui():
 	c.gridwidth = 3;
 	container_panel.add(dropdown, c);
 
-
+	add_file_button = JButton('<html>add image</html>', actionPerformed=select_file);
+	c.fill = GridBagConstraints.HORIZONTAL;
+	c.gridx = 3;
+	c.gridy = 0;
+	c.weightx = 0.5;
+	c.gridwidth = 1;
+	container_panel.add(add_file_button, c);
 	
 	process_file_button = JButton('<html>Process file from dropbox: </html>', actionPerformed=process_img);
 	c.fill = GridBagConstraints.HORIZONTAL;
 	c.gridx = 0;
 	c.gridy = 1;
 	c.weightx = 0.5;
-	c.gridwidth = 1;
+	c.gridwidth = 2;
 	container_panel.add(process_file_button, c);
-	add_file_button = JButton('<html>add image</html>', actionPerformed=select_file);
-	c.fill = GridBagConstraints.HORIZONTAL;
-	c.gridx = 1;
-	c.gridy = 1;
-	c.weightx = 0.5;
-	c.gridwidth = 1;
-	container_panel.add(add_file_button, c);	
+	
 	process_all_button = JButton('<html>process all</html>', actionPerformed=process_stack);
 	c.fill = GridBagConstraints.HORIZONTAL;
 	c.gridx = 2;
 	c.gridy = 1;
 	c.weightx = 0.5;
-	c.gridwidth = 1;
+	c.gridwidth = 2;
 	container_panel.add(process_all_button, c);
 	current_file = dropdown.getSelectedItem();
-
-
-
-	#c.fill = GridBagConstraints.HORIZONTAL; use for each
-	
-	#dropdown, c.grix: 0, c.gridy: 0, c.weightx=0.5, c.gridwidth=3
-	#process_file_button,  c.gridx: 0, c.gridy: 1, c.weightx=0.5, c.gridwidth=1
-	#add_file_button, c.gridx: 0, c.gridy: 2, c.weightx=0.5, c.gridwidth=1
-	#process_all_button, c.gridx: 0, c.gridy: 2, c.weightx=0.5, c.gridwidth=1
-	
-
-	
-
 	
 	frame.add(container_panel);
 	frame.visible = True;
-	
 
 
-#img1_path = OpenDialog('Select an image file').getPath();
-#img1 = IJ.openImage('/Users/willpeterson/Desktop/Huiwang-Lab/processing/0.tif');
-#img2_path = OpenDialog('Select an image file').getPath();
-#img2 = IJ.openImage('/Users/willpeterson/Desktop/Huiwang-Lab/processing/2.tif');
-#img1.show();
-#img2.show();
-#print(IJ.getImage());
 create_gui()
-
-#process(img1);
-#process(img2);
-
 
 
